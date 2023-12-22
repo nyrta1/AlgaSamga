@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title>User Profile</title>
+    <style>
+        body{
+            color: #1a202c;
+            text-align: left;
+            background-color: #e2e8f0;
+        }
+        .main-body {
+            padding: 15px;
+        }
+        .card {
+            box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+        }
+
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 0 solid rgba(0,0,0,.125);
+            border-radius: .25rem;
+        }
+
+        .card-body {
+            flex: 1 1 auto;
+            min-height: 1px;
+            padding: 1rem;
+        }
+
+        .gutters-sm {
+            margin-right: -8px;
+            margin-left: -8px;
+        }
+
+        .gutters-sm>.col, .gutters-sm>[class*=col-] {
+            padding-right: 8px;
+            padding-left: 8px;
+        }
+        .mb-3, .my-3 {
+            margin-bottom: 1rem!important;
+        }
+
+        .bg-gray-300 {
+            background-color: #e2e8f0;
+        }
+        .h-100 {
+            height: 100%!important;
+        }
+        .shadow-none {
+            box-shadow: none!important;
+        }
+    </style>
+</head>
+
+<body class="d-flex flex-column h-100">
+    <!-- Page Content-->
+    <section layout:fragment="content" class="py-3">
+        <div class="container">
+            <div class="main-body">
+
+                <!-- Breadcrumb -->
+                <nav aria-label="breadcrumb" class="main-breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a th:href="@{/home}">Home</a></li>
+                        <li class="breadcrumb-item active" th:href="@{/profile}">User Profile</li>
+                        <li class="breadcrumb-item active" th:text="${user.username}"></li>
+                    </ol>
+                </nav>
+                <!-- /Breadcrumb -->
+
+                <div class="row gutters-sm">
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="d-flex flex-column align-items-center text-center">
+                                    <img th:if="${user.photoUrl != null}" th:src="${user.photoUrl}" alt="userPhoto" class="rounded-circle" height="150" width="150">
+                                    <img th:unless="${user.photoUrl != null}" th:src="@{/img/undraw_profile.svg}" alt="userPhoto" class="rounded-circle" height="150" width="150">
+                                    <div class="mt-3">
+                                        <h4>
+                                            <span th:text="${user.surname}"></span>
+                                            <span> </span>
+                                            <span th:text="${user.name}"></span>
+                                        </h4>
+                                        <p th:text="${'@' + user.username}" class="text-secondary mb-1"></p>
+                                        <p th:if="${user.activeStatus}">
+                                            <i class="fa fa-circle" aria-hidden="true" style="color: green;"></i>
+                                            Online
+                                        </p>
+                                        <p th:if="${!user.activeStatus}">
+                                            <i class="fa fa-circle" aria-hidden="true" style="color: gray;"></i>
+                                            Offline
+                                        </p>
+                                        <p class="text-muted font-size-sm">
+                                        <p>
+                                            <span th:each="role : ${user.roles}">
+                                                <span th:text="${role.name} + ' '"></span>
+                                                <span th:if="${role.name eq 'TEACHER'}">👨‍🏫</span>
+                                                <span th:if="${role.name eq 'STUDENT'}">🎓</span>
+                                                <span th:if="${role.name eq 'ADMIN'}">👨‍💻</span>
+                                            </span>
+                                        </p>
+                                        </p>
+                                        <button class="btn btn-primary">Follow</button>
+                                        <button class="btn btn-outline-primary">Message</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="card-body">
+                                <h6 class="d-flex align-items-center mb-3">The progress 📚🚀</h6>
+                                <div th:each="establish : ${AllFollowed}">
+                                    <small th:text="${establish.subjects.title}"></small>
+                                    <div class="progress mb-3" style="height: 5px">
+                                        <div class="progress-bar bg-primary"
+                                             role="progressbar"
+                                             th:style="'width: ' + ${establish.progressPercent} + '%'"
+                                             aria-valuenow="${establish.progressPercent}"
+                                             aria-valuemin="0"
+                                             aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Full Name</h6>
+                                    </div>
+                                    <div th:text="${user.surname} + ' ' + ${user.name}" class="col-sm-9 text-secondary"></div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Email</h6>
+                                    </div>
+                                    <div th:text="${user.email}" class="col-sm-9 text-secondary"></div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Phone</h6>
+                                    </div>
+                                    <div th:text="${user.phoneNumber}" class="col-sm-9 text-secondary"></div>
+                                </div>
+                                <hr>
+                                <div class="row">
+                                    <div class="col-sm-3">
+                                        <h6 class="mb-0">Username</h6>
+                                    </div>
+                                    <div th:text="${user.username}" class="col-sm-9 text-secondary"></div>
+                                </div>
+                                <hr>
+                                <div th:if="${sessionUser.id == user.id}" class="row">
+                                    <div class="col-sm-12">
+                                        <a class="btn btn-info " th:href="@{/profile/edit}">Edit</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Carousel wrapper -->
+                        <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center" data-mdb-ride="carousel">
+                            <!-- Controls -->
+                            <div class="d-flex justify-content-center mb-1">
+                                <button class="carousel-control-prev position-relative" type="button" data-mdb-target="#carouselMultiItemExample" data-mdb-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next position-relative" type="button" data-mdb-target="#carouselMultiItemExample" data-mdb-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                            <!-- Inner -->
+                            <div class="carousel-inner py-2">
+                                <!-- Single item -->
+                                <div class="carousel-item active" th:each="followList : ${followed}">
+                                    <div class="container">
+                                        <div class="row">
+                                            <div th:each="subject : ${followList}" class="col-lg-4">
+                                                <div class="card h-100 shadow border-0">
+                                                    <a class="text-decoration-none link-dark stretched-link" th:href="@{/courses/{subjectId}(subjectId=${subject.id})}">
+                                                        <img class="card-img-top" th:src="${subject.photoUrl}" alt="..." />
+                                                        <div class="card-body p-2">
+                                                            <div th:text="${subject.type}" class="badge bg-primary bg-gradient rounded-pill mb-2"></div>
+                                                            <h5 class="card-title mb-3" th:text="${subject.title}"></h5>
+                                                        </div>
+                                                        <div class="card-footer p-3 pt-0 bg-transparent border-top-0">
+                                                            <div class="d-flex align-items-end justify-content-between">
+                                                                <div class="d-flex align-items-center">
+                                                                    <img class="rounded-circle me-3" th:src="${subject.createdBy.photoUrl}" width="48" height="48" alt="..." />
+                                                                    <div class="small">
+                                                                        <div class="fw-bold">
+                                                                            <span th:text="${subject.createdBy.name}"></span>
+                                                                            <span th:text="${subject.createdBy.surname}"></span>
+                                                                        </div>
+                                                                        <div class="text-muted">
+                                                                            <span th:text="${subject.createdOn + ' &middot; ' + subject.allLongitude + ' min read'}"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Inner -->
+                        </div>
+                        <!-- Carousel wrapper -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+          function handleCarouselNavigation(action) {
+            const carouselElement = document.querySelector("#carouselMultiItemExample");
+            const carousel = new bootstrap.Carousel(carouselElement);
+            if (action === "prev") {
+              carousel.prev();
+            } else if (action === "next") {
+              carousel.next();
+            }
+          }
+
+          const prevButton = document.querySelector(".carousel-control-prev");
+          prevButton.addEventListener("click", () => handleCarouselNavigation("prev"));
+
+          const nextButton = document.querySelector(".carousel-control-next");
+          nextButton.addEventListener("click", () => handleCarouselNavigation("next"));
+        </script>
+
+    </section>
+</body>
+</html>

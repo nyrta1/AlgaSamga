@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+    <title>Subject Detail</title>
+</head>
+
+<body class="d-flex flex-column">
+<!-- Page Content-->
+<section layout:fragment="content">
+    <!-- Page header with logo and tagline-->
+    <header class="py-5 bg-light border-bottom mb-4">
+        <div class="container">
+            <div class="text-center my-5">
+                <h1 class="fw-bolder" th:text="${lesson.title}"></h1>
+                <p class="lead mb-0" th:text="${lesson.description}"></p>
+            </div>
+        </div>
+    </header>
+    <!-- Page content-->
+    <div class="container">
+        <div class="row">
+            <!-- Blog entries-->
+            <div class="col-lg-9">
+                <!-- Featured blog post-->
+                <div class="card mb-8">
+                    <div class="embed-responsive embed-responsive-16by9">
+<!--                        <iframe class="embed-responsive-item" th:src="${lesson.url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="width: 100%; height: 600px;"></iframe>-->
+                        <video th:src="'/video/mp4/' + ${lesson.url}" width="100%" height="540px" controls></video>
+                    </div>
+                    <div class="card-body">
+                        <h2 class="card-title" th:text="${lesson.title}"></h2>
+                        <p class="lead mb-0" th:text="${lesson.description}"></p>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-end">
+                            <button th:if="${!mark}" id="markAs" class="btn btn-outline-primary">
+                                <i id="markIcon" class="bi bi-plus-lg"></i>
+                                <span id="markSpan">Mark as watched</span>
+                            </button>
+                            <button th:if="${mark}" id="markAs" class="btn btn-outline-primary">
+                                <i id="markIcon" class="bi bi-check-lg"></i>
+                                <span id="markSpan">Watched</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+<!--                Comments      -->
+                <section class="gradient-custom">
+                    <div class="container my-5 py-5">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-md-12 col-lg-20 col-xl-16">
+                                <div class="card">
+                                    <div class="card-body p-4">
+                                        <h4 class="text-center mb-4 pb-2">Comments</h4>
+                                        <div class="card-footer p-4 pt-0 bg-transparent border-top-0">
+                                            <div class="d-flex align-items-center">
+                                                <img class="rounded-circle me-3" th:src="${currentUser.photoUrl}" width="48" height="48" alt="..." />
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <form th:action="@{/courses/{subjectId}/{lessonId}/lesson-watch/send-comment(subjectId=${lesson.subjects.id}, lessonId=${lesson.id})}" method="post" class="form-inline my-2 my-lg-0 mb-3">
+                                                <input name="query" class="form-control mr-sm-2 mb-5" type="text" placeholder="Your comment" aria-label="Search">
+                                            </form>
+                                        </div>
+                                        <div th:each="comment : ${comments}" class="row" >
+                                            <div class="col">
+                                                <div class="d-flex flex-start">
+                                                    <img class="rounded-circle shadow-1-strong me-3"
+                                                         th:src="${comment.user.photoUrl}" alt="avatar" width="65"
+                                                         height="65" />
+                                                    <div class="flex-grow-1 flex-shrink-1">
+                                                        <div>
+                                                            <div class="d-flex justify-content-between align-items-center">
+                                                                <p class="mb-1">
+                                                                    <span th:text="${comment.user.surname}" class="small"></span>
+                                                                    <span class="small"> </span>
+                                                                    <span th:text="${comment.user.name}" class="small"></span>
+                                                                    <span class="small">- </span>
+                                                                    <span th:text="${#temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm:ss')}" class="small"></span>
+                                                                </p>
+                                                            </div>
+                                                            <p th:text="${comment.content}" class="small mb-0"></p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            <!-- Side widgets-->
+            <div class="col-lg-3">
+                <!-- Search widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Search</div>
+                    <div class="card-body">
+                        <form class="form-inline my-2 my-lg-0">
+                            <div class="input-group">
+                                <input name="query" class="form-control" type="search" placeholder="Enter search term..." aria-label="Search">
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">Go!</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Categories widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Categories</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <ul class="list-unstyled mb-0">
+                                    <li><a href="#!">Road Runner</a></li>
+                                    <li><a href="#!">Trail</a></li>
+                                    <li><a href="#!">Marathon</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Side widget-->
+                <div class="card mb-4">
+                    <div class="card-header">Side Widget</div>
+                    <div class="card-body">You can put anything you want inside of these side widgets. They are easy to use, and feature the Bootstrap 5 card component!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $(document).ready(function() {
+            $('#markAs').click(function() {
+                const mark = /*[[${mark}]]*/ false;
+                const subjectId = /*[[${lesson.subjects.id}]]*/ '';
+                const lessonId = /*[[${lesson.id}]]*/ '';
+
+                let url = '';
+
+                if (mark) {
+                    url = `/courses/${subjectId}/${lessonId}/unmark`;
+                    $("#markSpan").text("Mark as watched");
+                    $("#markIcon").toggleClass("bi-plus-lg bi-check-lg"); // Toggle classes
+                } else {
+                    url = `/courses/${subjectId}/${lessonId}/mark`;
+                    $("#markSpan").text("Watched");
+                    $("#markIcon").toggleClass("bi-check-lg bi-plus-lg"); // Toggle classes
+                }
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    success: function(data) {
+                        console.log('Lesson marked as watched successfully.');
+                    },
+                    error: function(error) {
+                        console.error('Error marking lesson:', error);
+                    }
+                });
+            });
+        });
+        /*]]>*/
+    </script>
+</section>
+</body>
+
+</html>
+

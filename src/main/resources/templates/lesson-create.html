@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+  <title>Lesson Create</title>
+</head>
+
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+  <!-- Page Content-->
+  <section layout:fragment="content" class="py-5">
+    <div class="container">
+      <form role="form" enctype="multipart/form-data" method="post" th:action="@{/lessons/{subjectId}(subjectId=${subjectId})}" th:object="${lesson}">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="title">Title</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    name="title"
+                    th:field="*{title}"
+                    placeholder="Lesson title">
+            <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{title}"></p>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="description">Description</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    th:field="*{description}"
+                    placeholder="Lesson description">
+            <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="photo">Photo: </label>
+          <input
+                  id="photo"
+                  type="file"
+                  name="photo">
+        </div>
+        <div class="form-group mb-3">
+          <label for="longitude">Longitude</label>
+          <input
+                  type="number"
+                  class="form-control"
+                  id="longitude"
+                  name="longitude"
+                  th:field="*{longitude}"
+                  placeholder="Longitude">
+          <p th:if="${#fields.hasErrors('longitude')}" class="text-danger" th:errors="*{longitude}"></p>
+        </div>
+        <div class="form-group mb-3">
+          <label for="video">URL</label>
+          <input
+                  id="video"
+                  type="file"
+                  name="video"
+          >
+        </div>
+        <p th:if="${#fields.hasErrors('photoUrl')}" class="text-danger" th:errors="*{photoUrl}"></p>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+    </div>
+  </section>
+</main>
+</body>
+
+</html>
