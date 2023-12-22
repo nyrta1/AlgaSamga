@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{admin-layout}">
+<head>
+    <meta charset="UTF-8">
+    <title>All Users</title>
+</head>
+<body>
+<section layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Page Heading -->
+        <h1 class="h3 mb-2 text-gray-800">Tables</h1>
+        <p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
+            For more information about DataTables, please visit the <a target="_blank"
+                                                                       href="https://datatables.net">official DataTables documentation</a>.</p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">All Users of the Platform</h6>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Photo</th>
+                            <th>Username</th>
+                            <th>Surname</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>PhoneNumber</th>
+                            <th>Role</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <th th:text="${user.id}"></th>
+                            <th>
+                                <img class="rounded-circle me-3" th:src="${user.photoUrl}" width="48" height="48" alt="">
+                            </th>
+                            <th th:text="${user.username}"></th>
+                            <th th:text="${user.surname}"></th>
+                            <th th:text="${user.name}"></th>
+                            <th th:text="${user.email}"></th>
+                            <th th:text="${user.phoneNumber}"></th>
+                            <th>
+                                <ul style="list-style-type: none;">
+                                    <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
+                                </ul>
+                            </th>
+                            <td>
+                                <!--                                <a th:href="@{/admin/all-users?userId=${user.id}}" class="btn btn-primary" data-toggle="modal" data-target="#userCorrectionModal">Action</a>-->
+                                <div th:if="${userId == null or userId != user.id}">
+                                    <a th:href="@{/admin/all-users(userId=${user.id})}" class="btn btn-primary">Action</a>
+                                </div>
+                                <div th:if="${userId != null and userId == user.id}">
+                                    <a class="btn btn-primary" data-toggle="modal" data-target="#userCorrectionModal">Action</a>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="userCorrectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">User Correction Data</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" enctype="multipart/form-data" role="form" th:action="@{/admin/all-users}" th:object="${correctionUser}">
+                        <div class="card-body">
+                            <div class="row">
+                                <input type="hidden" th:value="${correctionUser.id}" th:field="*{id}">
+                                <input type="hidden" th:value="${correctionUser.password}" th:field="*{password}">
+                                <input type="hidden" th:value="${correctionUser.photoUrl}" th:field="*{photoUrl}">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Surname</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="surname"
+                                            th:value="${correctionUser.surname}"
+                                            th:field="*{surname}"
+                                    >
+                                    <p th:if="${#fields.hasErrors('surname')}" class="text-danger"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Name</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="name"
+                                            th:value="${correctionUser.name}"
+                                            th:field="*{name}"
+                                    >
+                                    <p th:if="${#fields.hasErrors('name')}" class="text-danger"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Email</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="email"
+                                            th:value="${correctionUser.email}"
+                                            th:field="*{email}"
+                                    >
+                                    <p th:if="${#fields.hasErrors('email')}" class="text-danger"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Phone</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="phoneNumber"
+                                            th:value="${correctionUser.phoneNumber}"
+                                            th:field="*{phoneNumber}"
+                                    >
+                                    <p th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Username</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="text"
+                                            class="form-control"
+                                            id="username"
+                                            th:value="${correctionUser.username}"
+                                            th:field="*{username}"
+                                    >
+                                    <p th:if="${#fields.hasErrors('username')}" class="text-danger"></p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0">Photo</h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input
+                                            type="file"
+                                            name="file"
+                                    >
+                                </div>
+                                <div th:if="${message}">
+                                    <h2 th:text="${message}"/>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <a th:if="${activeStatus}" th:href="@{/admin/all-users/{userId}/logout(userId=${correctionUser.id})}" class="btn btn-outline-warning">Log out Account</a>
+                    <a th:href="@{/admin/all-users/{userId}/delete(userId=${correctionUser.id})}" class="btn btn-outline-danger">Delete Account</a>
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+
+<head>
+  <title>Course Create</title>
+</head>
+
+<body class="d-flex flex-column h-100">
+<main class="flex-shrink-0">
+
+  <!-- Page Content-->
+  <section layout:fragment="content" class="py-5">
+    <div class="container">
+      <form role="form" enctype="multipart/form-data" method="post" th:action="@{/courses/save}" th:object="${subject}">
+        <div class="form-row">
+          <div class="form-group col-md-6">
+            <label for="title">Title</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="title"
+                    name="title"
+                    th:field="*{title}"
+                    placeholder="Course title">
+            <p th:if="${#fields.hasErrors('title')}" class="text-danger" th:errors="*{subject}"></p>
+          </div>
+          <div class="form-group col-md-6">
+            <label for="description">Description</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    id="description"
+                    name="description"
+                    th:field="*{description}"
+                    placeholder="Lesson description">
+            <p th:if="${#fields.hasErrors('description')}" class="text-danger" th:errors="*{description}"></p>
+          </div>
+        </div>
+        <div class="form-group mb-3">
+          <label for="type">Course Type</label>
+          <input
+                  type="type"
+                  class="form-control"
+                  id="type"
+                  name="type"
+                  th:field="*{type}"
+                  placeholder="Course Type">
+          <p th:if="${#fields.hasErrors('type')}" class="text-danger" th:errors="*{type}"></p>
+        </div>
+        <div class="form-group mb-3">
+          <label>Photo: </label>
+          <input
+                  type="file"
+                  name="file">
+        </div>
+        <button type="submit" class="btn btn-primary">Create</button>
+      </form>
+    </div>
+  </section>
+</main>
+</body>
+
+</html>
